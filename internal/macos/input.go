@@ -133,7 +133,7 @@ func EnsureAccessibility() error {
 		return nil
 	}
 	C.promptForAccessibility()
-	return errors.New("accessibility permission required: grant access to Terminal or the keynari binary in System Settings > Privacy & Security > Accessibility, then restart")
+	return errors.New("accessibility permission required: grant access to Keynari in System Settings > Privacy & Security > Accessibility, and if you rebuilt the app remove the old entry and add the new one again")
 }
 
 func (l *Listener) Events() <-chan KeyEvent {

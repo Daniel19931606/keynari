@@ -28,6 +28,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var process: Process?
     private var statusMenuItem: NSMenuItem!
     private var restartMenuItem: NSMenuItem!
+    private var launchAttemptAt: Date?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
@@ -55,13 +56,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             DispatchQueue.main.async {
                 guard let self else { return }
                 if self.process === finishedTask {
+                    let livedFor = self.launchAttemptAt.map { Date().timeIntervalSince($0) } ?? 0
                     self.process = nil
-                    self.setStatus("Keynari is stopped")
+                    self.launchAttemptAt = nil
+                    if livedFor < 1.5 {
+                        self.setStatus("Keynari needs Accessibility permission")
+                    } else {
+                        self.setStatus("Keynari is stopped")
+                    }
                 }
             }
         }
 
         do {
+            launchAttemptAt = Date()
             try task.run()
             process = task
             setStatus("Keynari is running")
@@ -75,6 +83,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         guard let process else { return }
         if !process.isRunning {
             self.process = nil
+            self.launchAttemptAt = nil
             return
         }
 
@@ -89,6 +98,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     _ = kill(pid, SIGKILL)
                 }
                 self?.process = nil
+                self?.launchAttemptAt = nil
             }
         }
     }

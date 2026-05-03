@@ -46,6 +46,8 @@ After downloading:
 
 Keynari runs as a menu bar app. It does not open a window; use the Keynari icon in the macOS menu bar to see that it is running or to quit it.
 
+If the status quickly changes to `Keynari needs Accessibility permission`, the app launched but macOS did not allow the keyboard event tap yet.
+
 Current builds are unsigned. If macOS blocks the first launch, open **System Settings > Privacy & Security** and allow Keynari manually.
 
 ## Install From Source
@@ -94,6 +96,8 @@ If macOS blocks it:
 3. Open **Accessibility**
 4. Add and enable either your terminal app or `dist/Keynari.app`
 5. Restart Keynari
+
+If you rebuild the app locally, macOS may treat the new `keynari-bin` as a different client. Remove the old Keynari entry from Accessibility and add the newly built app again.
 
 ## CLI Playground
 
@@ -222,6 +226,8 @@ Keynari уже можно запускать локально на macOS:
 
 Keynari работает как приложение в верхней строке меню macOS. Окно не открывается; по иконке Keynari в menu bar видно, что приложение запущено, там же его можно закрыть.
 
+Если статус быстро меняется на `Keynari needs Accessibility permission`, приложение запустилось, но macOS ещё не разрешила keyboard event tap.
+
 Текущие сборки не подписаны Apple Developer сертификатом. Если macOS заблокирует первый запуск, открой **System Settings > Privacy & Security** и разреши запуск Keynari вручную.
 
 ## Установка из исходников
@@ -270,6 +276,8 @@ Keynari нужен доступ Accessibility, чтобы читать ввод 
 3. Открой **Accessibility**
 4. Добавь и включи Terminal или `dist/Keynari.app`
 5. Перезапусти Keynari
+
+Если ты пересобрал приложение локально, macOS может считать новый `keynari-bin` другим клиентом. Удали старую запись Keynari из Accessibility и добавь заново свежую сборку.
 
 ## Проверка в терминале
 
