@@ -42,8 +42,9 @@ ghbdtn rfr ndjb ltkf  ->  привет как твои дела
 6. Restart Keynari
 
 If you rebuild Keynari locally, remove the old Accessibility entry and add the new app again because macOS may treat the rebuilt binary as a different client.
+Keynari no longer auto-opens the macOS Accessibility prompt; it only reports the permission state.
 
-Keynari runs in the macOS menu bar. It does not open a window; use the Keynari menu bar icon to see that it is running or to quit it.
+Keynari runs as a background app. It does not open a window.
 
 ## Как Установить
 
@@ -55,8 +56,9 @@ Keynari runs in the macOS menu bar. It does not open a window; use the Keynari m
 6. Перезапусти Keynari
 
 Если ты пересобрал Keynari локально, удали старую запись в Accessibility и добавь новую сборку снова, потому что macOS может считать пересобранный бинарник другим клиентом.
+Keynari больше не открывает системное окно Accessibility сам; он только сообщает состояние разрешения.
 
-Keynari работает в верхней строке меню macOS. Окно не открывается; по иконке Keynari в menu bar видно, что приложение запущено, там же его можно закрыть.
+Keynari работает как фоновое приложение. Окно не открывается.
 
 ## macOS Security Note
 

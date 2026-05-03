@@ -44,9 +44,9 @@ After downloading:
 4. Grant Accessibility access in **System Settings > Privacy & Security > Accessibility**
 5. Restart Keynari
 
-Keynari runs as a menu bar app. It does not open a window; use the Keynari icon in the macOS menu bar to see that it is running or to quit it.
+Keynari currently runs as a background app. It does not open a window; check Activity Monitor or `~/Library/Logs/Keynari.log` if you need to verify that it is running.
 
-If the status quickly changes to `Keynari needs Accessibility permission`, the app launched but macOS did not allow the keyboard event tap yet.
+Keynari no longer opens the macOS permission prompt on its own; it only checks the current trust state and writes errors to the log.
 
 Current builds are unsigned. If macOS blocks the first launch, open **System Settings > Privacy & Security** and allow Keynari manually.
 
@@ -97,7 +97,7 @@ If macOS blocks it:
 4. Add and enable either your terminal app or `dist/Keynari.app`
 5. Restart Keynari
 
-If you rebuild the app locally, macOS may treat the new `keynari-bin` as a different client. Remove the old Keynari entry from Accessibility and add the newly built app again.
+If you rebuild the app locally, macOS may treat the new app binary as a different client. Remove the old Keynari entry from Accessibility and add the newly built app again.
 
 ## CLI Playground
 
@@ -224,9 +224,9 @@ Keynari уже можно запускать локально на macOS:
 4. Выдай доступ Accessibility в **System Settings > Privacy & Security > Accessibility**
 5. Перезапусти Keynari
 
-Keynari работает как приложение в верхней строке меню macOS. Окно не открывается; по иконке Keynari в menu bar видно, что приложение запущено, там же его можно закрыть.
+Keynari сейчас работает как фоновое приложение. Окно не открывается; проверить запуск можно через Activity Monitor или лог `~/Library/Logs/Keynari.log`.
 
-Если статус быстро меняется на `Keynari needs Accessibility permission`, приложение запустилось, но macOS ещё не разрешила keyboard event tap.
+Keynari больше не открывает системное окно разрешений сам; он только проверяет текущий статус и пишет ошибки в лог.
 
 Текущие сборки не подписаны Apple Developer сертификатом. Если macOS заблокирует первый запуск, открой **System Settings > Privacy & Security** и разреши запуск Keynari вручную.
 
@@ -277,7 +277,7 @@ Keynari нужен доступ Accessibility, чтобы читать ввод 
 4. Добавь и включи Terminal или `dist/Keynari.app`
 5. Перезапусти Keynari
 
-Если ты пересобрал приложение локально, macOS может считать новый `keynari-bin` другим клиентом. Удали старую запись Keynari из Accessibility и добавь заново свежую сборку.
+Если ты пересобрал приложение локально, macOS может считать новый app-бинарь другим клиентом. Удали старую запись Keynari из Accessibility и добавь заново свежую сборку.
 
 ## Проверка в терминале
 

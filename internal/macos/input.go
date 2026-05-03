@@ -43,11 +43,6 @@ static bool checkAccessibilityPermissions(void) {
     return AXIsProcessTrusted();
 }
 
-static void promptForAccessibility(void) {
-    NSDictionary *options = @{(__bridge id)kAXTrustedCheckOptionPrompt: @YES};
-    AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)options);
-}
-
 static CFMachPortRef createEventTap(void) {
     CGEventMask eventMask = (1 << kCGEventKeyDown);
     globalTap = CGEventTapCreate(
@@ -132,7 +127,6 @@ func EnsureAccessibility() error {
 	if bool(C.checkAccessibilityPermissions()) {
 		return nil
 	}
-	C.promptForAccessibility()
 	return errors.New("accessibility permission required: grant access to Keynari in System Settings > Privacy & Security > Accessibility, and if you rebuilt the app remove the old entry and add the new one again")
 }
 

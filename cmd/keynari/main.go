@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"runtime"
+	"strings"
 	"sync/atomic"
 	"syscall"
 	"time"
@@ -20,6 +21,10 @@ import (
 func main() {
 	if len(os.Args) > 1 && os.Args[1] == "run" {
 		runLive(os.Args[2:])
+		return
+	}
+	if isAppBundleLaunch() {
+		runLive([]string{"--quiet", "--log-file", os.ExpandEnv("$HOME/Library/Logs/Keynari.log")})
 		return
 	}
 
@@ -67,6 +72,14 @@ func main() {
 	printCorrections(*trace, e.Flush())
 
 	fmt.Println(e.Text())
+}
+
+func isAppBundleLaunch() bool {
+	executable, err := os.Executable()
+	if err != nil {
+		return false
+	}
+	return strings.Contains(executable, ".app/Contents/MacOS/Keynari")
 }
 
 func runLive(args []string) {
