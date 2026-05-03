@@ -5,11 +5,17 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APP="$ROOT/dist/Keynari.app"
 MACOS="$APP/Contents/MacOS"
 RESOURCES="$APP/Contents/Resources"
+ICON="$ROOT/dist/Keynari.icns"
 
 rm -rf "$APP"
 mkdir -p "$MACOS" "$RESOURCES"
 
 go build -o "$MACOS/keynari-bin" "$ROOT/cmd/keynari"
+
+if command -v magick >/dev/null 2>&1 && command -v iconutil >/dev/null 2>&1; then
+	"$ROOT/scripts/make_icon.sh" >/dev/null
+	cp "$ICON" "$RESOURCES/Keynari.icns"
+fi
 
 cat > "$MACOS/Keynari" <<'SH'
 #!/usr/bin/env bash
@@ -30,7 +36,9 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 	<key>CFBundleExecutable</key>
 	<string>Keynari</string>
 	<key>CFBundleIdentifier</key>
-	<string>dev.keynari.local</string>
+	<string>com.daniel19931606.keynari</string>
+	<key>CFBundleIconFile</key>
+	<string>Keynari</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -50,5 +58,9 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 </dict>
 </plist>
 PLIST
+
+if command -v codesign >/dev/null 2>&1; then
+	codesign --force --deep --sign - "$APP" >/dev/null
+fi
 
 echo "Built $APP"

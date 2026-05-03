@@ -40,7 +40,7 @@ jobs:
         with:
           tag_name: ${{ github.ref_type == 'tag' && github.ref_name || inputs.version }}
           name: Keynari ${{ github.ref_type == 'tag' && github.ref_name || inputs.version }}
-          generate_release_notes: true
+          body_path: RELEASE_NOTES.md
           files: |
             dist/release/Keynari-macOS-*.zip
             dist/release/checksums.txt
