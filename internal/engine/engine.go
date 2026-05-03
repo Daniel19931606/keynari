@@ -152,6 +152,12 @@ func (e *Engine) correctKnownWhole(segment string) (string, bool) {
 		if corrected, ok := e.correctKnownCore(segment); ok {
 			return corrected, true
 		}
+		core, suffix := trimSentencePunctuationSuffix(segment)
+		if core != segment && core != "" {
+			if corrected, ok := e.correctKnownCore(core); ok {
+				return corrected + suffix, true
+			}
+		}
 	}
 
 	if hasTrailingOuterPunctuation(segment) {
@@ -332,7 +338,7 @@ func (e *Engine) shouldCorrect(converted, original string, target, source Dictio
 
 func isShortLatinRussianFunction(original, converted string) bool {
 	switch original {
-	case "z", "b", "d", "c", "r", "j", "e", "yf", "yt", "gj", "pf", "jn", "lj", "vs", "ns":
+	case "z", "b", "d", "c", "r", "j", "e", "xt", "uj", "yf", "yt", "gj", "pf", "jn", "lj", "vs", "ns", "ot", "of":
 		return true
 	default:
 		return false
@@ -486,6 +492,20 @@ func trimOuterPunctuation(segment string) (string, string, string) {
 	return string(runes[:start]), string(runes[start:end]), string(runes[end:])
 }
 
+func trimSentencePunctuationSuffix(segment string) (string, string) {
+	runes := []rune(segment)
+	end := len(runes)
+	for end > 0 {
+		switch runes[end-1] {
+		case '.', '!', '?':
+			end--
+		default:
+			return string(runes[:end]), string(runes[end:])
+		}
+	}
+	return "", segment
+}
+
 func isLeadingOuterPunctuation(r rune) bool {
 	return r == '(' || r == '"' || r == '[' || r == '{'
 }
@@ -518,6 +538,8 @@ func fixConvertedTypo(text string) string {
 		return "свои"
 	case "своби":
 		return "свои"
+	case "ёто":
+		return "это"
 	case "eghlish":
 		return "english"
 	case "nrmal":

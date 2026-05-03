@@ -25,11 +25,13 @@ import UserNotifications
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
     private var process: Process?
+    private var statusMenuItem: NSMenuItem!
+    private var restartMenuItem: NSMenuItem!
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
-        startKeynari()
         buildMenu()
+        startKeynari()
         notifyStarted()
     }
 
@@ -48,11 +50,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         task.arguments = ["run", "--quiet", "--log-file", logFile.path]
         task.standardOutput = FileHandle.nullDevice
         task.standardError = FileHandle.nullDevice
+        task.terminationHandler = { [weak self] finishedTask in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                if self.process === finishedTask {
+                    self.process = nil
+                    self.setStatus("Keynari is stopped")
+                }
+            }
+        }
 
         do {
             try task.run()
             process = task
+            setStatus("Keynari is running")
         } catch {
+            setStatus("Keynari failed to start")
             showAlert("Keynari could not start", error.localizedDescription)
         }
     }
@@ -73,12 +86,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         let menu = NSMenu()
-        let status = NSMenuItem(title: "Keynari is running", action: nil, keyEquivalent: "")
-        status.isEnabled = false
-        menu.addItem(status)
+        statusMenuItem = NSMenuItem(title: "Keynari is starting...", action: nil, keyEquivalent: "")
+        statusMenuItem.isEnabled = false
+        menu.addItem(statusMenuItem)
         menu.addItem(NSMenuItem.separator())
+        restartMenuItem = NSMenuItem(title: "Restart Keynari", action: #selector(restart), keyEquivalent: "r")
+        menu.addItem(restartMenuItem)
         menu.addItem(NSMenuItem(title: "Quit Keynari", action: #selector(quit), keyEquivalent: "q"))
         statusItem.menu = menu
+    }
+
+    private func setStatus(_ title: String) {
+        statusMenuItem?.title = title
     }
 
     private func notifyStarted() {
@@ -102,6 +121,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func quit() {
         NSApp.terminate(nil)
+    }
+
+    @objc private func restart() {
+        stopKeynari()
+        startKeynari()
     }
 }
 
