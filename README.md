@@ -30,6 +30,24 @@ Existing layout switchers often miss words, break punctuation, or feel opaque. K
 
 ## Install From Source
 
+## Download The App
+
+You can download a ready-to-run macOS build from GitHub Releases:
+
+[Download Keynari for macOS](https://github.com/Daniel19931606/keynari/releases/latest)
+
+After downloading:
+
+1. Unzip `Keynari-macOS-*.zip`
+2. Move `Keynari.app` to Applications if you want
+3. Open it once
+4. Grant Accessibility access in **System Settings > Privacy & Security > Accessibility**
+5. Restart Keynari
+
+Current builds are unsigned. If macOS blocks the first launch, open **System Settings > Privacy & Security** and allow Keynari manually.
+
+## Install From Source
+
 Requirements:
 
 - macOS
@@ -123,7 +141,7 @@ Current local behavior:
 - Start at login
 - Toggle per app
 - User dictionary editor
-- Release builds
+- Signed release builds
 - Windows and Linux runners
 - More languages and layout pairs
 
@@ -183,6 +201,24 @@ Keynari уже можно запускать локально на macOS:
 - CLI-режим для тестов;
 - `.app`, который можно открыть двойным кликом;
 - вся обработка локальная.
+
+## Установка из исходников
+
+## Скачать приложение
+
+Готовую macOS-сборку можно скачать из GitHub Releases:
+
+[Скачать Keynari для macOS](https://github.com/Daniel19931606/keynari/releases/latest)
+
+После скачивания:
+
+1. Распакуй `Keynari-macOS-*.zip`
+2. Перенеси `Keynari.app` в Applications, если хочешь
+3. Открой приложение один раз
+4. Выдай доступ Accessibility в **System Settings > Privacy & Security > Accessibility**
+5. Перезапусти Keynari
+
+Текущие сборки не подписаны Apple Developer сертификатом. Если macOS заблокирует первый запуск, открой **System Settings > Privacy & Security** и разреши запуск Keynari вручную.
 
 ## Установка из исходников
 
@@ -277,6 +313,6 @@ Keynari ничего не отправляет наружу.
 - автозапуск при входе;
 - включение/выключение для отдельных приложений;
 - редактор пользовательского словаря;
-- релизные сборки;
+- подписанные релизные сборки;
 - Windows и Linux;
 - новые языки и пары раскладок.
