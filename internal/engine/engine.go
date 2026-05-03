@@ -148,6 +148,12 @@ func (e *Engine) correctSegment(segment string) (string, bool) {
 }
 
 func (e *Engine) correctKnownWhole(segment string) (string, bool) {
+	if hasLayoutPunctuation(segment) {
+		if corrected, ok := e.correctKnownCore(segment); ok {
+			return corrected, true
+		}
+	}
+
 	if hasTrailingOuterPunctuation(segment) {
 		prefix, core, suffix := trimOuterPunctuation(segment)
 		if core != "" {
