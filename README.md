@@ -44,7 +44,7 @@ After downloading:
 4. Grant Accessibility access in **System Settings > Privacy & Security > Accessibility**
 5. Restart Keynari
 
-Keynari currently runs as a background app. It does not open a window; check Activity Monitor or `~/Library/Logs/Keynari.log` if you need to verify that it is running.
+Keynari runs as a menu bar app. It does not open a window; use the Keynari icon in the macOS menu bar to see that it is running or to quit it.
 
 Keynari no longer opens the macOS permission prompt on its own; it only checks the current trust state and writes errors to the log.
 
@@ -224,7 +224,7 @@ Keynari уже можно запускать локально на macOS:
 4. Выдай доступ Accessibility в **System Settings > Privacy & Security > Accessibility**
 5. Перезапусти Keynari
 
-Keynari сейчас работает как фоновое приложение. Окно не открывается; проверить запуск можно через Activity Monitor или лог `~/Library/Logs/Keynari.log`.
+Keynari работает как приложение в верхней строке меню macOS. Окно не открывается; по иконке Keynari в menu bar видно, что приложение запущено, там же его можно закрыть.
 
 Keynari больше не открывает системное окно разрешений сам; он только проверяет текущий статус и пишет ошибки в лог.
 

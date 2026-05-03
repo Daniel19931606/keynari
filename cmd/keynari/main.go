@@ -19,12 +19,14 @@ import (
 )
 
 func main() {
+	runtime.LockOSThread()
+
 	if len(os.Args) > 1 && os.Args[1] == "run" {
 		runLive(os.Args[2:])
 		return
 	}
 	if isAppBundleLaunch() {
-		runLive([]string{"--quiet", "--log-file", os.ExpandEnv("$HOME/Library/Logs/Keynari.log")})
+		runLive([]string{"--app", "--quiet", "--log-file", os.ExpandEnv("$HOME/Library/Logs/Keynari.log")})
 		return
 	}
 
@@ -91,6 +93,7 @@ func runLive(args []string) {
 	aggressive := fs.Bool("aggressive", true, "correct obvious wrong-layout words even when absent from the dictionary")
 	trace := fs.Bool("trace", true, "print live corrections")
 	quiet := fs.Bool("quiet", false, "disable live correction logs")
+	appMode := fs.Bool("app", false, "run as a macOS menu bar app")
 	logFile := fs.String("log-file", "", "write logs to file")
 	_ = fs.Parse(args)
 
@@ -139,7 +142,23 @@ func runLive(args []string) {
 		log.Println("Keynari live mode is running. Press Ctrl+C to stop.")
 	}
 
-	for event := range listener.Events() {
+	if *appMode {
+		go consumeEvents(e, replacer, &replacing, *trace, listener.Events())
+		macos.RunStatusApp()
+		return
+	}
+
+	consumeEvents(e, replacer, &replacing, *trace, listener.Events())
+}
+
+func consumeEvents(
+	e *engine.Engine,
+	replacer *macos.Replacer,
+	replacing *atomic.Bool,
+	trace bool,
+	events <-chan macos.KeyEvent,
+) {
+	for event := range events {
 		if replacing.Load() {
 			continue
 		}
@@ -175,7 +194,7 @@ func runLive(args []string) {
 		time.Sleep(80 * time.Millisecond)
 		replacing.Store(false)
 
-		if *trace {
+		if trace {
 			log.Printf("%q -> %q", correction.Original, correction.Corrected)
 		}
 	}

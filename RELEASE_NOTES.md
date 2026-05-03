@@ -44,7 +44,7 @@ ghbdtn rfr ndjb ltkf  ->  привет как твои дела
 If you rebuild Keynari locally, remove the old Accessibility entry and add the new app again because macOS may treat the rebuilt binary as a different client.
 Keynari no longer auto-opens the macOS Accessibility prompt; it only reports the permission state.
 
-Keynari runs as a background app. It does not open a window.
+Keynari runs as a menu bar app. It does not open a window; use the Keynari menu bar icon to quit it.
 
 ## Как Установить
 
@@ -58,7 +58,7 @@ Keynari runs as a background app. It does not open a window.
 Если ты пересобрал Keynari локально, удали старую запись в Accessibility и добавь новую сборку снова, потому что macOS может считать пересобранный бинарник другим клиентом.
 Keynari больше не открывает системное окно Accessibility сам; он только сообщает состояние разрешения.
 
-Keynari работает как фоновое приложение. Окно не открывается.
+Keynari работает в верхней строке меню macOS. Окно не открывается; закрывается через иконку Keynari в menu bar.
 
 ## macOS Security Note
 
