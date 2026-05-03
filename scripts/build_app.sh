@@ -21,6 +21,7 @@ fi
 cat > "$BUILD/KeynariLauncher.swift" <<'SWIFT'
 import AppKit
 import UserNotifications
+import Darwin
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
@@ -72,9 +73,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func stopKeynari() {
         guard let process else { return }
-        if process.isRunning {
-            process.terminate()
-            process.waitUntilExit()
+        if !process.isRunning {
+            self.process = nil
+            return
+        }
+
+        let pid = process.processIdentifier
+        process.interrupt()
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.8) { [weak self] in
+            if kill(pid, 0) == 0 {
+                _ = kill(pid, SIGTERM)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                if kill(pid, 0) == 0 {
+                    _ = kill(pid, SIGKILL)
+                }
+                self?.process = nil
+            }
         }
     }
 
@@ -120,12 +135,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func quit() {
-        NSApp.terminate(nil)
+        stopKeynari()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            NSApp.terminate(nil)
+        }
     }
 
     @objc private func restart() {
         stopKeynari()
-        startKeynari()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            self?.startKeynari()
+        }
     }
 }
 
