@@ -41,6 +41,8 @@ ghbdtn rfr ndjb ltkf  ->  привет как твои дела
 5. Grant Accessibility permission in **System Settings > Privacy & Security > Accessibility**
 6. Restart Keynari
 
+Keynari runs in the background. It does not open a window yet; macOS shows a notification when the app starts.
+
 ## Как Установить
 
 1. Скачай `Keynari-macOS-v0.1.0.zip`
@@ -49,6 +51,8 @@ ghbdtn rfr ndjb ltkf  ->  привет как твои дела
 4. Открой `Keynari.app`
 5. Выдай Accessibility-доступ в **System Settings > Privacy & Security > Accessibility**
 6. Перезапусти Keynari
+
+Keynari работает в фоне. Окно пока не открывается; при запуске macOS покажет уведомление.
 
 ## macOS Security Note
 

@@ -20,6 +20,9 @@ fi
 cat > "$MACOS/Keynari" <<'SH'
 #!/usr/bin/env bash
 DIR="$(cd "$(dirname "$0")" && pwd)"
+if command -v osascript >/dev/null 2>&1; then
+	osascript -e 'display notification "Keynari is now fixing mistyped RU/EN words in the background." with title "Keynari is running"' >/dev/null 2>&1 || true
+fi
 exec "$DIR/keynari-bin" run --quiet --log-file "$HOME/Library/Logs/Keynari.log"
 SH
 chmod +x "$MACOS/Keynari"

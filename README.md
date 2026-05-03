@@ -44,6 +44,8 @@ After downloading:
 4. Grant Accessibility access in **System Settings > Privacy & Security > Accessibility**
 5. Restart Keynari
 
+Keynari currently runs as a background app. It does not open a window yet; when it starts, macOS shows a notification and the app begins fixing text in the active app.
+
 Current builds are unsigned. If macOS blocks the first launch, open **System Settings > Privacy & Security** and allow Keynari manually.
 
 ## Install From Source
@@ -217,6 +219,8 @@ Keynari уже можно запускать локально на macOS:
 3. Открой приложение один раз
 4. Выдай доступ Accessibility в **System Settings > Privacy & Security > Accessibility**
 5. Перезапусти Keynari
+
+Сейчас Keynari работает как фоновое приложение. Окно пока не открывается; при запуске macOS показывает уведомление, после чего приложение сразу начинает исправлять текст в активных приложениях.
 
 Текущие сборки не подписаны Apple Developer сертификатом. Если macOS заблокирует первый запуск, открой **System Settings > Privacy & Security** и разреши запуск Keynari вручную.
 
