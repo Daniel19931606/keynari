@@ -124,6 +124,21 @@ func runLive(args []string) {
 	replacer := macos.NewReplacer()
 	var replacing atomic.Bool
 
+	if *appMode {
+		go func() {
+			if err := listener.Start(); err != nil {
+				log.Print(err)
+				macos.SetStatusTitle("Keynari needs Accessibility permission")
+				return
+			}
+			macos.SetStatusTitle("Keynari is running")
+			consumeEvents(e, replacer, &replacing, *trace, listener.Events())
+		}()
+		macos.RunStatusApp("Keynari is starting...")
+		listener.Stop()
+		return
+	}
+
 	if err := listener.Start(); err != nil {
 		log.Fatal(err)
 	}
@@ -140,12 +155,6 @@ func runLive(args []string) {
 
 	if !*quiet {
 		log.Println("Keynari live mode is running. Press Ctrl+C to stop.")
-	}
-
-	if *appMode {
-		go consumeEvents(e, replacer, &replacing, *trace, listener.Events())
-		macos.RunStatusApp()
-		return
 	}
 
 	consumeEvents(e, replacer, &replacing, *trace, listener.Events())

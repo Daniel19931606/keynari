@@ -7,21 +7,38 @@ package macos
 #cgo LDFLAGS: -framework AppKit
 
 #import <AppKit/AppKit.h>
+#include <stdlib.h>
 
 @interface KeynariMenuTarget : NSObject
 - (void)quit:(id)sender;
+- (void)openAccessibility:(id)sender;
 @end
 
 @implementation KeynariMenuTarget
 - (void)quit:(id)sender {
     [NSApp terminate:nil];
 }
+- (void)openAccessibility:(id)sender {
+    NSURL *url = [NSURL URLWithString:@"x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"];
+    [[NSWorkspace sharedWorkspace] openURL:url];
+}
 @end
 
 static NSStatusItem *keynariStatusItem = nil;
 static KeynariMenuTarget *keynariMenuTarget = nil;
+static NSMenuItem *keynariStatusMenuItem = nil;
 
-static void runStatusApp(void) {
+static void setStatusTitle(const char *title) {
+    if (keynariStatusMenuItem == nil) {
+        return;
+    }
+    NSString *value = [NSString stringWithUTF8String:title];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [keynariStatusMenuItem setTitle:value];
+    });
+}
+
+static void runStatusApp(const char *initialStatus) {
     @autoreleasepool {
         [NSApplication sharedApplication];
         [NSApp setActivationPolicy:NSApplicationActivationPolicyAccessory];
@@ -38,10 +55,15 @@ static void runStatusApp(void) {
         }
 
         NSMenu *menu = [NSMenu new];
-        NSMenuItem *status = [[NSMenuItem alloc] initWithTitle:@"Keynari is running" action:nil keyEquivalent:@""];
-        [status setEnabled:NO];
-        [menu addItem:status];
+        NSString *statusTitle = [NSString stringWithUTF8String:initialStatus];
+        keynariStatusMenuItem = [[NSMenuItem alloc] initWithTitle:statusTitle action:nil keyEquivalent:@""];
+        [keynariStatusMenuItem setEnabled:NO];
+        [menu addItem:keynariStatusMenuItem];
         [menu addItem:[NSMenuItem separatorItem]];
+
+        NSMenuItem *openAccessibility = [[NSMenuItem alloc] initWithTitle:@"Open Accessibility Settings" action:@selector(openAccessibility:) keyEquivalent:@""];
+        [openAccessibility setTarget:keynariMenuTarget];
+        [menu addItem:openAccessibility];
 
         NSMenuItem *quit = [[NSMenuItem alloc] initWithTitle:@"Quit Keynari" action:@selector(quit:) keyEquivalent:@"q"];
         [quit setTarget:keynariMenuTarget];
@@ -53,8 +75,17 @@ static void runStatusApp(void) {
 }
 */
 import "C"
+import "unsafe"
 
 // RunStatusApp blocks while the macOS menu bar app is running.
-func RunStatusApp() {
-	C.runStatusApp()
+func RunStatusApp(initialStatus string) {
+	cStatus := C.CString(initialStatus)
+	defer C.free(unsafe.Pointer(cStatus))
+	C.runStatusApp(cStatus)
+}
+
+func SetStatusTitle(title string) {
+	cTitle := C.CString(title)
+	defer C.free(unsafe.Pointer(cTitle))
+	C.setStatusTitle(cTitle)
 }
