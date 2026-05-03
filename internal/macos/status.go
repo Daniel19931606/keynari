@@ -7,11 +7,18 @@ package macos
 #cgo LDFLAGS: -framework AppKit
 
 #import <AppKit/AppKit.h>
+#import <ApplicationServices/ApplicationServices.h>
 #include <stdlib.h>
+
+static void requestAccessibilityPermissionsFromMenu(void) {
+    NSDictionary *options = @{(__bridge id)kAXTrustedCheckOptionPrompt: @YES};
+    AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)options);
+}
 
 @interface KeynariMenuTarget : NSObject
 - (void)quit:(id)sender;
 - (void)openAccessibility:(id)sender;
+- (void)requestAccessibility:(id)sender;
 @end
 
 @implementation KeynariMenuTarget
@@ -21,6 +28,9 @@ package macos
 - (void)openAccessibility:(id)sender {
     NSURL *url = [NSURL URLWithString:@"x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"];
     [[NSWorkspace sharedWorkspace] openURL:url];
+}
+- (void)requestAccessibility:(id)sender {
+    requestAccessibilityPermissionsFromMenu();
 }
 @end
 
@@ -64,6 +74,10 @@ static void runStatusApp(const char *initialStatus) {
         NSMenuItem *openAccessibility = [[NSMenuItem alloc] initWithTitle:@"Open Accessibility Settings" action:@selector(openAccessibility:) keyEquivalent:@""];
         [openAccessibility setTarget:keynariMenuTarget];
         [menu addItem:openAccessibility];
+
+        NSMenuItem *requestAccessibility = [[NSMenuItem alloc] initWithTitle:@"Request Accessibility Permission" action:@selector(requestAccessibility:) keyEquivalent:@""];
+        [requestAccessibility setTarget:keynariMenuTarget];
+        [menu addItem:requestAccessibility];
 
         NSMenuItem *quit = [[NSMenuItem alloc] initWithTitle:@"Quit Keynari" action:@selector(quit:) keyEquivalent:@"q"];
         [quit setTarget:keynariMenuTarget];
