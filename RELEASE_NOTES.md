@@ -41,7 +41,7 @@ ghbdtn rfr ndjb ltkf  ->  привет как твои дела
 5. Grant Accessibility permission in **System Settings > Privacy & Security > Accessibility**
 6. Restart Keynari
 
-Keynari runs in the background. It does not open a window yet; macOS shows a notification when the app starts.
+Keynari runs in the macOS menu bar. It does not open a window; use the Keynari menu bar icon to see that it is running or to quit it.
 
 ## Как Установить
 
@@ -52,7 +52,7 @@ Keynari runs in the background. It does not open a window yet; macOS shows a not
 5. Выдай Accessibility-доступ в **System Settings > Privacy & Security > Accessibility**
 6. Перезапусти Keynari
 
-Keynari работает в фоне. Окно пока не открывается; при запуске macOS покажет уведомление.
+Keynari работает в верхней строке меню macOS. Окно не открывается; по иконке Keynari в menu bar видно, что приложение запущено, там же его можно закрыть.
 
 ## macOS Security Note
 
