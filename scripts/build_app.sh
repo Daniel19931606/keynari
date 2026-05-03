@@ -81,26 +81,48 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func stopKeynari() {
         guard let process else { return }
-        if !process.isRunning {
+        defer {
             self.process = nil
             self.launchAttemptAt = nil
-            return
         }
+
+        guard process.isRunning else { return }
 
         let pid = process.processIdentifier
         process.interrupt()
-        DispatchQueue.global().asyncAfter(deadline: .now() + 0.8) { [weak self] in
-            if kill(pid, 0) == 0 {
-                _ = kill(pid, SIGTERM)
+
+        for _ in 0..<15 {
+            if !process.isRunning {
+                return
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                if kill(pid, 0) == 0 {
-                    _ = kill(pid, SIGKILL)
-                }
-                self?.process = nil
-                self?.launchAttemptAt = nil
-            }
+            usleep(100_000)
         }
+
+        if kill(pid, 0) == 0 {
+            _ = kill(pid, SIGTERM)
+        }
+
+        for _ in 0..<10 {
+            if !process.isRunning {
+                return
+            }
+            usleep(100_000)
+        }
+
+        if kill(pid, 0) == 0 {
+            _ = kill(pid, SIGKILL)
+        }
+
+        let killCommand = """
+        pkill -TERM -f 'Contents/MacOS/keynari-bin run --quiet --log-file'
+        sleep 0.3
+        pkill -KILL -f 'Contents/MacOS/keynari-bin run --quiet --log-file' || true
+        """
+        let cleanup = Process()
+        cleanup.executableURL = URL(fileURLWithPath: "/bin/sh")
+        cleanup.arguments = ["-c", killCommand]
+        try? cleanup.run()
+        cleanup.waitUntilExit()
     }
 
     private func buildMenu() {
@@ -146,16 +168,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func quit() {
         stopKeynari()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            NSApp.terminate(nil)
-        }
+        NSApp.terminate(nil)
     }
 
     @objc private func restart() {
         stopKeynari()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            self?.startKeynari()
-        }
+        startKeynari()
     }
 }
 
